@@ -4,8 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const profileRoutes = require('./routes/profileRoutes');
-const logRoutes = require('./routes/logRoutes'); // Import log routes
-const workoutRoutes = require('./routes/workoutRoutes'); // Import workout routes
+const logRoutes = require('./routes/logRoutes');
+const workoutRoutes = require('./routes/workoutRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -13,9 +13,25 @@ dotenv.config();
 // Initialize Express
 const app = express();
 
+// CORS Configuration
+const allowedOrigins = [
+  'https://your-vercel-domain.vercel.app', // Replace with your Vercel frontend domain
+  'http://localhost:3000' // Include localhost for testing (optional)
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
 // Middleware
 app.use(express.json());
-app.use(cors());
 
 // Import models
 const User = require('./models/User');
@@ -43,7 +59,7 @@ app.get('/', (req, res) => {
 // User routes
 app.use('/api/users', userRoutes);
 app.use('/api/profiles', profileRoutes);
-app.use('/api/logs', logRoutes); // Add log routes here
+app.use('/api/logs', logRoutes);
 app.use('/api/workouts', workoutRoutes);
 
 // Global error handling middleware
