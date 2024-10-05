@@ -102,6 +102,7 @@ export default function WorkoutSearch({
           <option value="calves">Calves</option>
           <option value="chest">Chest</option>
           <option value="forearms">Forearms</option>
+          <option value="shoulders">Shoulders</option>
           <option value="glutes">Glutes</option>
           <option value="hamstrings">Hamstrings</option>
           <option value="lats">Lats</option>

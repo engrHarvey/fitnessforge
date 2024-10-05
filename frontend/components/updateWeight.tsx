@@ -58,7 +58,7 @@ export default function UpdateWeight({ userId, initialWeight, initialUnit, onWei
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       // Update only the weight field without modifying other profile data
-      await axios.put(`http://localhost:5000/api/profiles/update-weight`, { weight: weightInKg }, config);
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/profiles/update-weight`, { weight: weightInKg }, config);
 
       // Create a new log entry for the weight change
       const logData = {
@@ -67,7 +67,7 @@ export default function UpdateWeight({ userId, initialWeight, initialUnit, onWei
         value: parseFloat(weightInKg), // Convert to number format for logging
       };
 
-      await axios.post(`http://localhost:5000/api/logs/create`, logData, config);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logs/create`, logData, config);
 
       // Update the parent component with the new weight
       onWeightUpdate(weightInKg);

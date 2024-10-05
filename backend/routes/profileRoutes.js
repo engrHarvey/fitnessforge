@@ -37,8 +37,8 @@ const uploadImageToGCS = (file) => {
     });
 
     blobStream.on('finish', () => {
-      // Construct the public URL of the image
-      const publicUrl = `https://storage.cloud.google.com/${bucket.name}/${blob.name}`;
+      // Construct the public URL of the image using the correct format
+      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
       resolve(publicUrl);
     });
 
@@ -48,9 +48,13 @@ const uploadImageToGCS = (file) => {
 
 // Create or Update Profile and Create Log if Weight Data is Present
 router.post('/create', authenticateToken, upload.single('profilePhoto'), async (req, res) => {
-  const { fname, lname, height, weight, birthdate, gender } = req.body; // Removed username
+  console.log('Request Body:', req.body);
+  console.log('Request File:', req.file);
+  console.log('User ID from Token:', req.user.id);
+
+  const { fname, lname, height, weight, birthdate, gender } = req.body;
   try {
-    const userId = req.user.id; // Get the userId from the authenticated user
+    const userId = req.user.id;
     
     // Validate that a user exists
     const user = await User.findById(userId);
@@ -72,15 +76,15 @@ router.post('/create', authenticateToken, upload.single('profilePhoto'), async (
 
     // Create or update profile
     const profileData = {
-      userId: user._id, // Reference user by ID
+      userId: user._id,
       fname,
       lname,
-      height: height || "", // Set default values if empty
+      height: height || "",
       weight: weight || "",
       birthdate,
       age,
       gender,
-      userImage: userImageUrl,
+      userImage: userImageUrl, // Assign the correct URL here
     };
 
     // Save or update the profile
@@ -95,7 +99,7 @@ router.post('/create', authenticateToken, upload.single('profilePhoto'), async (
       const weightLog = new Log({
         userId: user._id,
         type: 'weight',
-        value: parseFloat(weight), // Ensure value is a number
+        value: parseFloat(weight),
       });
       await weightLog.save();
       console.log('Weight log created successfully.');

@@ -34,13 +34,13 @@ export default function Journal() {
         }
 
         // Fetch the current user's ID using the /current endpoint
-        const userResponse = await axios.get("http://localhost:5000/api/users/current", {
+        const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/current`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const userId = userResponse.data._id;
 
         // Fetch the user's workouts from the workout API
-        const workoutResponse = await axios.get(`http://localhost:5000/api/workouts/${userId}`);
+        const workoutResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/workouts/${userId}`);
         setWorkouts(workoutResponse.data);
         setIsLoading(false);
       } catch (error) {

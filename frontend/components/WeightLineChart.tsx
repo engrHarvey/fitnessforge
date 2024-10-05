@@ -49,7 +49,7 @@ const WeightLineChart: React.FC = () => {
         };
 
         // Fetch profile data to get height and gender
-        const userResponse = await axios.get("http://localhost:5000/api/users/current", config);
+        const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/current`, config);
         const userId = userResponse.data._id;
         const { height, gender } = userResponse.data.profile;
 
@@ -57,7 +57,7 @@ const WeightLineChart: React.FC = () => {
         setProfileData({ height, gender });
 
         // Fetch weight logs for the user
-        const weightLogResponse = await axios.get(`http://localhost:5000/api/logs/user/${userId}/weight`, config);
+        const weightLogResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/logs/user/${userId}/weight`, config);
 
         if (!weightLogResponse.data.length) {
           setError("No weight logs found. Start tracking your weight to see the progress.");

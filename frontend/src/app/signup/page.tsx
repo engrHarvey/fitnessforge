@@ -25,7 +25,7 @@ const Signup: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/register', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/register`, {
         username: formData.username,
         email: formData.email,
         password: formData.password,

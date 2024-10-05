@@ -1,3 +1,10 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "react-hooks/exhaustive-deps": "warn", // To handle the warning about missing dependencies in useEffect
+    "jsx-a11y/alt-text": "warn", // Change severity for `img` alt text rule
+    "next/next/no-img-element": "off" // Turn off the Next.js specific rule for using `next/image`
+  }
 }

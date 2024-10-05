@@ -15,22 +15,23 @@ type Workout = {
 
 // Muscle groups and workout type color maps
 const muscleColors: Record<string, string> = {
-  abdominals: "#FF5733",
-  abductors: "#33FF57",
-  adductors: "#5733FF",
-  biceps: "#33FFF6",
-  calves: "#FFC300",
-  chest: "#FF3333",
-  forearms: "#33FF8F",
-  glutes: "#FF33A1",
-  hamstrings: "#338FFF",
-  lats: "#FF8F33",
-  lower_back: "#FF5733",
-  middle_back: "#33FFD1",
-  neck: "#33A1FF",
-  quadriceps: "#F833FF",
-  traps: "#8F33FF",
-  triceps: "#FF3365",
+  abdominals: "#FF5733",       // Orange Red
+  abductors: "#33FF57",        // Lime Green
+  adductors: "#5733FF",        // Blue Purple
+  biceps: "#33FFF6",           // Cyan
+  calves: "#FFC300",           // Gold
+  chest: "#FF3333",            // Red
+  forearms: "#33FF8F",         // Mint Green
+  shoulders: "#FFD700",        // Gold Yellow
+  glutes: "#FF33A1",           // Hot Pink
+  hamstrings: "#338FFF",       // Light Blue
+  lats: "#FF8F33",             // Light Orange
+  lower_back: "#FF5733",       // Light Red
+  middle_back: "#33FFD1",      // Aqua
+  neck: "#33A1FF",             // Sky Blue
+  quadriceps: "#F833FF",       // Magenta
+  traps: "#8F33FF",            // Purple
+  triceps: "#FF3365",          // Coral Red
 };
 
 // Workout type colors
@@ -66,11 +67,11 @@ const MuscleDonutChart: React.FC = () => {
         };
 
         // Fetch current user data to get the user ID
-        const userResponse = await axios.get("http://localhost:5000/api/users/current", config);
+        const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/current`, config);
         const userId = userResponse.data._id;
 
         // Fetch current user's workouts
-        const workoutResponse = await axios.get(`http://localhost:5000/api/workouts/${userId}`, config);
+        const workoutResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/workouts/${userId}`, config);
 
         // Set the raw workout data and formatted data based on the default view type
         setWorkoutData(workoutResponse.data);

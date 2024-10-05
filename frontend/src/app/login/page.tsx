@@ -15,7 +15,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, formData);
       if (response.status === 200) {
         alert('Login Successful!');
         localStorage.setItem('token', response.data.token); // Store token for AuthWrapper validation

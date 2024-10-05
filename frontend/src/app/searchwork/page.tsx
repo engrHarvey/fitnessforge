@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import AuthWrapper from "../../../components/AuthWrapper";
 import WorkoutSearch, { Exercise } from "../../../components/workout";
 import axios from "axios";
+import Image from 'next/image';
 
 const SearchWorkout: React.FC = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -27,7 +28,7 @@ const SearchWorkout: React.FC = () => {
           },
         };
 
-        const response = await axios.get("http://localhost:5000/api/users/current", config);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/current`, config);
         setUserId(response.data._id); // Save the user ID
       } catch (err) {
         console.error("Error fetching user ID:", err);
@@ -54,7 +55,7 @@ const SearchWorkout: React.FC = () => {
   
     try {
       // Use the existing endpoint `/api/workouts`
-      const response = await axios.post("http://localhost:5000/api/workouts", workoutData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/workouts`, workoutData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`, // Add the token to headers
         },
@@ -69,7 +70,11 @@ const SearchWorkout: React.FC = () => {
       console.error("Error logging workout:", err);
       setError("Error logging workout. Please try again.");
     }
-  };  
+  };
+  
+  const customLoader = ({ src }: { src: string }) => {
+    return src;
+  };
 
   return (
     <AuthWrapper>
@@ -111,7 +116,14 @@ const SearchWorkout: React.FC = () => {
                       {/* Image Positioned Below the Exercise Name */}
                       {exercise.imageUrl && (
                         <div className="w-full h-full mb-4 overflow-hidden rounded-lg shadow-md">
-                          <img src={exercise.imageUrl} alt={exercise.name} className="w-full h-full object-cover" />
+                          <Image
+                            loader={customLoader}
+                            src={exercise.imageUrl}
+                            alt={exercise.name}
+                            width={500}
+                            height={500}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                       )}
 

@@ -3,9 +3,19 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+// Define the ProfileData type for strong typing
+interface ProfileData {
+  userId: string;
+  height: number;
+  weight: number;
+  birthdate: string;
+  gender: string;
+  [key: string]: any;
+}
+
 interface CalculateBMIProps {
-  profileData: any;
-  setProfileData: React.Dispatch<React.SetStateAction<any>>;
+  profileData: ProfileData; // Use ProfileData type instead of any
+  setProfileData: React.Dispatch<React.SetStateAction<ProfileData>>;
   setLatestBmiLog: React.Dispatch<React.SetStateAction<number | null>>;
   setNoBmiData: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -44,8 +54,8 @@ const CalculateBMI: React.FC<CalculateBMIProps> = ({
   // Function to calculate BMI and determine BMI category
   const handleCalculateBmi = async () => {
     if (profileData?.height && profileData?.weight) {
-      const heightInMeters = parseFloat(profileData.height);
-      const weightInKg = parseFloat(profileData.weight);
+      const heightInMeters = profileData.height;
+      const weightInKg = profileData.weight;
       const calculatedBmi = weightInKg / (heightInMeters * heightInMeters);
       setBmi(calculatedBmi);
       determineBmiCategory(calculatedBmi);
@@ -65,7 +75,8 @@ const CalculateBMI: React.FC<CalculateBMIProps> = ({
           value: calculatedBmi,
         };
 
-        await axios.post("http://localhost:5000/api/logs/create", logData, config);
+        // Change this URL when deploying to a live server
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/logs/create`, logData, config);
         console.log("BMI log created successfully.");
         setLatestBmiLog(calculatedBmi);
         setNoBmiData(false);

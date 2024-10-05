@@ -21,6 +21,7 @@ const muscleColors: Record<string, string> = {
   adductors: "#5733FF", // Blue Purple
   biceps: "#33FFF6", // Cyan
   calves: "#FFC300", // Gold
+  shoulders: "#FFD700", // Gold Yellow
   chest: "#FF3333", // Red
   forearms: "#33FF8F", // Mint Green
   glutes: "#FF33A1", // Hot Pink

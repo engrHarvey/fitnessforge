@@ -1,25 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+
+// Define a strong type for profileData to avoid using "any"
+interface ProfileData {
+  height: number;
+  gender: string;
+  [key: string]: any; // Allow for additional dynamic properties if needed
+}
 
 interface IdealWeightProps {
-  profileData: any; // Use the complete profileData object to extract height and gender
+  profileData: ProfileData; // Use the defined ProfileData type instead of any
 }
 
 const IdealWeight: React.FC<IdealWeightProps> = ({ profileData }) => {
   const [idealWeight, setIdealWeight] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (profileData?.height && profileData?.gender) {
-      calculateIdealWeight(profileData.height, profileData.gender);
-    }
-  }, [profileData]);
-
   // Convert height in meters to inches (1 meter = 39.3701 inches)
   const heightInInches = profileData?.height ? profileData.height * 39.3701 : 0;
 
-  // Miller Formula Calculation
-  const calculateIdealWeight = (height: number, gender: string) => {
+  // Memoize the calculateIdealWeight function using useCallback to ensure stable reference in useEffect dependency array
+  const calculateIdealWeight = useCallback((height: number, gender: string) => {
     let idealWeightInKg: number;
     const inchesOverFiveFeet = heightInInches - 60; // Calculate height above 5 feet (60 inches)
 
@@ -38,11 +39,16 @@ const IdealWeight: React.FC<IdealWeightProps> = ({ profileData }) => {
     }
 
     setIdealWeight(idealWeightInKg);
-  };
+  }, [heightInInches]);
+
+  useEffect(() => {
+    if (profileData?.height && profileData?.gender) {
+      calculateIdealWeight(profileData.height, profileData.gender);
+    }
+  }, [profileData, calculateIdealWeight]);
 
   return (
     <div className="my-4">
-
       {idealWeight !== null && (
         <div className="mt-4">
           <p className="text-lg">

@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
@@ -16,7 +18,7 @@ export default function ProfileForm({ profileData, setProfileData }: any) {
   const [file, setFile] = useState<File | null>(null);
   const [crop, setCrop] = useState<Crop>({ unit: "%", width: 30, height: 30, x: 0, y: 0 });
   const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
-  const [aspect, setAspect] = useState<number | undefined>(1);
+  const [aspect, setAspect] = useState<number | undefined>(1); // Keep the aspect state
   const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
   const [croppedBlob, setCroppedBlob] = useState<Blob | null>(null); // State to store the cropped Blob file
   const generateRandomString = () => Math.random().toString(36).substring(2, 14);
@@ -63,9 +65,9 @@ export default function ProfileForm({ profileData, setProfileData }: any) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
     const age = calculateAge(profileData.birthdate);
-
+  
     const updatedProfileData = {
       fname: profileData.firstName,
       lname: profileData.lastName,
@@ -75,40 +77,41 @@ export default function ProfileForm({ profileData, setProfileData }: any) {
       gender: profileData.gender,
       birthdate: profileData.birthdate,
     };
-
+  
     try {
       const formData = new FormData();
       Object.keys(updatedProfileData).forEach((key) => {
         formData.append(key, updatedProfileData[key as keyof typeof updatedProfileData]?.toString() || "");
       });
-
-      // Generate a random string to append to the cropped image name
+  
       const randomString = generateRandomString();
-
-      // If cropped image is available, use it. Otherwise, fallback to original file.
+  
       if (croppedBlob) {
         formData.append('profilePhoto', croppedBlob, `cropped-image-${randomString}.jpg`);
       } else if (file) {
         formData.append('profilePhoto', file);
       }
-
+  
+      console.log('Form Data Content:', Array.from(formData.entries())); // Log form data
+  
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No authentication token found');
         return;
       }
-
+  
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const response = await axios.post('http://localhost:5000/api/profiles/create', formData, config);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/profiles/create`, formData, config);
       console.log('Profile saved successfully:', response.data);
-
-      // Refresh the profile page after successful update
-    window.location.reload();
-    
+  
+      window.location.reload();
     } catch (error) {
       console.error('Error saving profile:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Error response data:', error.response?.data);
+      }
     }
-  };
+  };   
 
   useEffect(() => {
     if (!completedCrop || !previewCanvasRef.current || !imageRef.current) {
@@ -171,6 +174,7 @@ export default function ProfileForm({ profileData, setProfileData }: any) {
                     imageRef.current = e.currentTarget as HTMLImageElement;
                   }}
                   className="max-w-full h-auto rounded-md"
+                  alt="Source for cropping"
                 />
               )}
             </ReactCrop>
