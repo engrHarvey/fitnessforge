@@ -15,7 +15,7 @@ const app = express();
 
 // CORS Configuration
 const allowedOrigins = [
-  'https://your-vercel-domain.vercel.app', // Replace with your Vercel frontend domain
+  'https://fitnessforge.vercel.app', // Replace with your Vercel frontend domain
   'http://localhost:3000' // Include localhost for testing (optional)
 ];
 
